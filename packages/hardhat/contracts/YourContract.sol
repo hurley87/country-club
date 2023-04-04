@@ -15,7 +15,7 @@ contract YourContract {
 
     // State Variables
     address public immutable owner;
-    string public greeting = "Building Unstoppable Apps!!!";
+    string public greeting = "Building all the time!!!";
     bool public premium = false;
     uint256 public totalCounter = 0;
     mapping(address => uint) public userGreetingCounter;
@@ -48,7 +48,7 @@ contract YourContract {
 
         // Change state variables
         greeting = _newGreeting;
-        totalCounter += 1;
+        totalCounter += 2;
         userGreetingCounter[msg.sender] += 1;
 
         // msg.value: built-in global variable that represents the amount of ether sent with the transaction
