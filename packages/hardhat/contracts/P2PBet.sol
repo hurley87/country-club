@@ -16,13 +16,12 @@ contract P2PBet is Ownable {
         uint gameId;
         uint homeTeamId;
         uint awayTeamId;
-        uint256 startTime;
-        uint256 endTime;
     }
     
     struct Bet {
         uint betId;
         uint256 amount;
+        uint256 odds;
         uint teamId;
         uint gameId;
         address creator;
@@ -37,7 +36,7 @@ contract P2PBet is Ownable {
     uint256 public betCount = 0;
     uint public totalBetMoney = 0;
     
-    event BetCreated(uint256 indexed id, uint256 amount, uint teamId, address creator);
+    event BetCreated(uint256 indexed id, uint256 amount, uint256 _odds, uint teamId, address creator);
     event BetAccepted(uint256 indexed id, address acceptor);
     event BetFinished(uint256 indexed id, uint teamId);
     event BetCancelled(uint256 indexed id);
@@ -49,13 +48,14 @@ contract P2PBet is Ownable {
         teams.push(Team(teamCounter, _name));
     }
 
-    function createGame(uint _homeTeamId, uint _awayTeamId, uint256 _startTime, uint256 _endTime) public onlyOwner {
+    function createGame(uint _homeTeamId, uint _awayTeamId) public onlyOwner {
         uint gameCounter = games.length;
-        games.push(Game(gameCounter, _homeTeamId, _awayTeamId, _startTime, _endTime));
+        games.push(Game(gameCounter, _homeTeamId, _awayTeamId));
     }
     
-    function createBet(uint _gameId, uint _teamId) public payable {
+    function createBet(uint _gameId, uint _teamId, uint _odds) public payable {
         require(msg.value > 0, "Bet amount must be greater than 0");
+        require(_odds > 0, "Odds must be greater than 0");
         require(games.length >= _gameId, 'Game does not exist');
         require(teams.length >= _teamId, 'Team does not exist');
 
@@ -64,6 +64,7 @@ contract P2PBet is Ownable {
         Bet memory bet = Bet({
             betId: betCounter,
             amount: msg.value,
+            odds: _odds,
             teamId: _teamId,
             gameId: _gameId,
             creator: msg.sender,
@@ -74,14 +75,14 @@ contract P2PBet is Ownable {
 
         totalBetMoney += msg.value;
         
-        emit BetCreated(betCount, msg.value, _teamId, msg.sender);
+        emit BetCreated(betCount, msg.value, _odds, _teamId, msg.sender);
     }
     
     function acceptBet(uint _id) public payable {
         Bet storage bet = bets[_id];
-        require(msg.value == bet.amount, "Bet amount must match");
+        require(msg.value == bet.amount / bet.odds, "Does not match the expected amount");
         require(msg.sender != bet.creator, "Cannot accept your own bet");
-        require(bet.state == BetState.Created, "Bet not available");
+        require(bet.state == BetState.Created, "Bet is no longer available");
         bet.acceptor = msg.sender;
         bet.state = BetState.Accepted;
         emit BetAccepted(_id, msg.sender);
@@ -89,13 +90,11 @@ contract P2PBet is Ownable {
     
     function finishBet(uint _id, uint _winningTeamId) public onlyOwner {
         Bet storage bet = bets[_id];
-        require(bet.state == BetState.Accepted, "Bet not accepted");
-        require(bet.state == BetState.Finished, "Bet is over");
+        require(bet.state == BetState.Accepted, "You can only finish an accepted bet");
         bet.state = BetState.Finished;
-        uint256 totalAmount = bet.amount;
+        uint256 totalAmount = bet.amount + bet.amount / bet.odds;
         uint256 ownerFee = totalAmount * 5 / 100;
         uint256 winnerAmount = totalAmount - ownerFee;
-        console.log(winnerAmount);
         if(_winningTeamId == bet.teamId) {
             payable(bet.acceptor).transfer(winnerAmount);
         } else {
