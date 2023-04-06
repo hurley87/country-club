@@ -2,11 +2,12 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
+import "./Players.sol";
 
-contract P2PBet is Ownable {
+contract P2PBet is Ownable, Players {
     
     enum BetState {Created, Accepted, Finished, Cancelled}
-    
+
     struct Team {
         uint256 teamId;
         string name;
@@ -16,6 +17,7 @@ contract P2PBet is Ownable {
         uint gameId;
         uint homeTeamId;
         uint awayTeamId;
+        uint256 startTime;
     }
     
     struct Bet {
@@ -37,7 +39,7 @@ contract P2PBet is Ownable {
     uint public totalBetMoney = 0;
     
     event BetCreated(uint256 indexed id, uint256 amount, uint256 _odds, uint teamId, address creator);
-    event BetAccepted(uint256 indexed id, address acceptor);
+    event BetAccepted(uint256 indexed id, address acceptor, address creator);
     event BetFinished(uint256 indexed id, uint teamId);
     event BetCancelled(uint256 indexed id);
     
@@ -48,9 +50,9 @@ contract P2PBet is Ownable {
         teams.push(Team(teamCounter, _name));
     }
 
-    function createGame(uint _homeTeamId, uint _awayTeamId) public onlyOwner {
+    function createGame(uint _homeTeamId, uint _awayTeamId, uint256 _startTime) public onlyOwner {
         uint gameCounter = games.length;
-        games.push(Game(gameCounter, _homeTeamId, _awayTeamId));
+        games.push(Game(gameCounter, _homeTeamId, _awayTeamId, _startTime));
     }
     
     function createBet(uint _gameId, uint _teamId, uint _odds) public payable {
@@ -58,6 +60,7 @@ contract P2PBet is Ownable {
         require(_odds > 0, "Odds must be greater than 0");
         require(games.length >= _gameId, 'Game does not exist');
         require(teams.length >= _teamId, 'Team does not exist');
+        require(games[_gameId].startTime > block.timestamp, 'Game has already started');
 
         uint betCounter = bets.length;
 
@@ -85,7 +88,10 @@ contract P2PBet is Ownable {
         require(bet.state == BetState.Created, "Bet is no longer available");
         bet.acceptor = msg.sender;
         bet.state = BetState.Accepted;
-        emit BetAccepted(_id, msg.sender);
+
+        totalBetMoney += msg.value;
+
+        emit BetAccepted(_id, bet.creator, bet.acceptor);
     }
     
     function finishBet(uint _id, uint _winningTeamId) public onlyOwner {
@@ -97,9 +103,16 @@ contract P2PBet is Ownable {
         uint256 winnerAmount = totalAmount - ownerFee;
         if(_winningTeamId == bet.teamId) {
             payable(bet.acceptor).transfer(winnerAmount);
+            updateWins(bet.acceptor, winnerAmount);
+            updateLosses(bet.creator, winnerAmount);
         } else {
             payable(bet.creator).transfer(winnerAmount);
+            updateWins(bet.creator, winnerAmount);
+            updateLosses(bet.acceptor, winnerAmount);
         }
+
+        updateBetCount(bet.creator);
+        updateBetCount(bet.acceptor);
 
         emit BetFinished(_id, _winningTeamId);
     }
