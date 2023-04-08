@@ -20,7 +20,7 @@ To get started with Scaffold-Eth 2, follow the steps below:
 yarn install
 ```
 
-App is setup to deploy on sepolia. To deploy and start the app
+To deploy and start the app
 
 ```
 yarn deploy
