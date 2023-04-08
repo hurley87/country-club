@@ -21,15 +21,15 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourContract", {
-    from: deployer,
-    // Contract constructor arguments
-    args: [deployer],
-    log: true,
-    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
-    // automatically mining the contract deployment transaction. There is no effect on live networks.
-    autoMine: true,
-  });
+  // await deploy("YourContract", {
+  //   from: deployer,
+  //   // Contract constructor arguments
+  //   args: [deployer],
+  //   log: true,
+  //   // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+  //   // automatically mining the contract deployment transaction. There is no effect on live networks.
+  //   autoMine: true,
+  // });
 
   await deploy("CountryClub", {
     from: deployer,
@@ -40,10 +40,10 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     autoMine: true,
   });
 
-  // Get the deployed contract
-  const countryClub = await hre.ethers.getContract("CountryClub", deployer);
-  console.log("Contract deployed to:", countryClub.address);
-  await countryClub.transferOwnership("0xfdB375d859c4CE20Af8b73Fabbf122a8aE29D46A");
+  // // Get the deployed contract
+  // const countryClub = await hre.ethers.getContract("CountryClub", deployer);
+  // console.log("Contract deployed to:", countryClub.address);
+  // await countryClub.transferOwnership("0xfdB375d859c4CE20Af8b73Fabbf122a8aE29D46A");
 };
 
 export default deployYourContract;
