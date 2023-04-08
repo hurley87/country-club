@@ -76,35 +76,29 @@ export const Bet = ({ betId }: { betId: BigNumber }) => {
     }
   }
 
-  bet?.amount && console.log(makeNum(bet?.amount));
-  bet?.odds && console.log(makeNum(bet?.odds));
-  bet?.amount && console.log(Number(bet?.amount.mul(100).div(bet?.odds)) / 100);
-  bet?.amount && console.log((Number(bet?.amount.mul(100).div(bet?.odds)) / 100).toString());
-  console.log(betValue);
-
   return (
     <div className={`flex space-x-2 text-sm`}>
       {isBetLoading && <div>Loading...</div>}
       {!isBetLoading && bet && (
-        <div className={`flex space-x-2 text-sm`}>
-          <p>
-            <BetCreator address={bet?.creator} /> bet {makeNum(bet?.amount)} ETH with {makeNum(bet?.odds)} to 1 odds on{" "}
-            {bet?.teamId && <BetTeam teamId={bet.teamId} />}
+        <div className={`flex space-x-2 text-sm pt-4`}>
+          <p className="mt-0.5">
+            <BetCreator address={bet?.creator} /> bet {makeNum(bet?.amount)} ETH with {parseInt(makeNum(bet?.odds))} to
+            1 odds on {bet?.teamId && <BetTeam teamId={bet.teamId} />}
           </p>
           {myBet && betState === "Created" && (
             <button
               onClick={handleCancelBet}
               className={`${
                 isCancelLoading ? "loading before:!w-4 before:!h-4 before:!mx-0" : ""
-              } btn btn-primary btn-sm px-2 rounded-full font-normal space-x-2 normal-case`}
+              } btn btn-primary btn-xs px-2 rounded-full font-normal space-x-2 normal-case`}
             >
-              {!isCancelLoading && "Cancel"}
+              Cancel
             </button>
           )}
           {betState === "Cancelled" && (
             <button
               disabled={true}
-              className={`btn btn-primary btn-sm px-2 rounded-full font-normal space-x-2 normal-case`}
+              className={`btn btn-primary btn-xs px-2 rounded-full font-normal space-x-2 normal-case`}
             >
               Cancelled
             </button>
@@ -112,7 +106,7 @@ export const Bet = ({ betId }: { betId: BigNumber }) => {
           {!myBet && betState === "Created" && (
             <button
               onClick={handleAcceptBet}
-              className={`btn btn-primary btn-sm px-2 rounded-full font-normal space-x-2 normal-case ${
+              className={`btn btn-primary btn-xs px-2 rounded-full font-normal space-x-2 normal-case ${
                 isAcceptLoading ? "loading before:!w-4 before:!h-4 before:!mx-0" : ""
               }`}
             >
@@ -122,7 +116,7 @@ export const Bet = ({ betId }: { betId: BigNumber }) => {
           {betState === "Accepted" && (
             <button
               disabled={true}
-              className={`btn btn-primary btn-sm px-2 rounded-full font-normal space-x-2 normal-case`}
+              className={`btn btn-primary btn-xs px-2 rounded-full font-normal space-x-2 normal-case`}
             >
               Accepted by <BetCreator address={bet?.acceptor} />
             </button>
@@ -130,7 +124,7 @@ export const Bet = ({ betId }: { betId: BigNumber }) => {
           {betState === "Finished" && (
             <button
               disabled={true}
-              className={`btn btn-primary btn-sm px-2 rounded-full font-normal space-x-2 normal-case`}
+              className={`btn btn-primary btn-xs px-2 rounded-full font-normal space-x-2 normal-case`}
             >
               Bet won by <BetCreator address={bet?.winner} />
             </button>

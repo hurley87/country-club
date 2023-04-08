@@ -93,14 +93,13 @@ export const CreateBet = ({ game }: { game?: any }) => {
               )}
               <EtherInput placeholder="Amount to bet" value={betValue} onChange={value => setBetValue(value)} />
               <div className="flex flex-row gap-2 w-full max-w-7xl pb-1 flex-wrap">
-                <p>Odds:</p>
                 <button
                   className={`btn btn-secondary btn-sm normal-case font-thin ${
                     odds === 1 ? "bg-base-300" : "bg-base-100"
                   }`}
                   onClick={() => setOdds(1)}
                 >
-                  1/1
+                  1 to 1
                 </button>
                 <button
                   className={`btn btn-secondary btn-sm normal-case font-thin ${
@@ -108,7 +107,7 @@ export const CreateBet = ({ game }: { game?: any }) => {
                   }`}
                   onClick={() => setOdds(2)}
                 >
-                  2/1
+                  2 to 1
                 </button>
                 <button
                   className={`btn btn-secondary btn-sm normal-case font-thin ${
@@ -116,7 +115,7 @@ export const CreateBet = ({ game }: { game?: any }) => {
                   }`}
                   onClick={() => setOdds(3)}
                 >
-                  3/1
+                  3 to 1
                 </button>
               </div>
               <button

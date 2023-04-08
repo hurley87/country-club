@@ -48,14 +48,11 @@ export const ViewBets = ({ game }: { game?: any }) => {
           <label htmlFor="view-bets-modal" className="btn btn-ghost btn-sm btn-circle absolute right-3 top-3">
             ✕
           </label>
-          <div className="space-y-3">
+          <div className="space-y-1">
             {isBetsLoading && <div className="flex flex-col space-y-3">loading</div>}
             {!isBetsLoading && bets?.length === 0 && <div className="flex flex-col space-y-3">no bets yet</div>}
             {!isBetsLoading && bets && bets.length > 0 && (
-              <div className="flex flex-col space-y-3">
-                <p>
-                  {bets?.length} {bets?.length === 1 ? "bet" : "bets"}
-                </p>
+              <div className="flex flex-col space-y-0">
                 {bets?.map((betId: any, index: number) => (
                   <Bet key={index} betId={betId} />
                 ))}

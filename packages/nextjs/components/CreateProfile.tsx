@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ArrowSmallRightIcon } from "@heroicons/react/24/outline";
 import { useScaffoldContractWrite, useScaffoldEventSubscriber } from "~~/hooks/scaffold-eth";
 
 export const CreateProfile = ({ address }: { address?: string }) => {
@@ -26,14 +25,14 @@ export const CreateProfile = ({ address }: { address?: string }) => {
   };
 
   return (
-    <div className="flex flex-col mt-6 px-7 py-8 bg-base-200 opacity-80 rounded-2xl shadow-lg border-2 border-primary">
-      <span className="text-lg text-black">What is your username?</span>
+    <div className="flex flex-col mt-6 px-10 py-8 bg-base-100 opacity-80 rounded-2xl shadow-lg border-2 border-primary">
+      <span className="text-lg text-white">Choose your username</span>
 
-      <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5">
+      <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-5">
         <input
           type="text"
-          placeholder="Write your greeting here"
-          className="bg-white p-6 rounded-md text-black"
+          placeholder="bond007"
+          className="bg-white p-4 rounded-md text-black w-56"
           onChange={e => setUsername(e.target.value)}
         />
         <div className="flex rounded-full border border-primary p-1 flex-shrink-0">
@@ -45,11 +44,7 @@ export const CreateProfile = ({ address }: { address?: string }) => {
               disabled={username === ""}
               onClick={handleCreateProfile}
             >
-              {!isLoading && (
-                <>
-                  Send <ArrowSmallRightIcon className="w-3 h-3 mt-0.5" />
-                </>
-              )}
+              {!isLoading && <>Create</>}
             </button>
           </div>
         </div>
