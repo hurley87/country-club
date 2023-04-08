@@ -1,6 +1,6 @@
 # Country Club || 🏗 Scaffold-Eth 2
 
-⚠️ Country Club is a peer to peer sports betting app
+Country Club is a peer to peer sports betting app
 
 
 ## Requirements
