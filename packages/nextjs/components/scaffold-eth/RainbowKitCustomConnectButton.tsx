@@ -1,3 +1,4 @@
+import { Username } from "./Username";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Balance, BlockieAvatar } from "~~/components/scaffold-eth";
@@ -58,7 +59,7 @@ export const RainbowKitCustomConnectButton = () => {
                       className="btn btn-secondary btn-sm pl-0 pr-2 shadow-md"
                     >
                       <BlockieAvatar address={account.address} size={24} ensImage={account.ensAvatar} />
-                      <span className="ml-2 mr-1">{account.displayName}</span>
+                      <Username address={account.address} displayName={account.displayName} />
                       <span>
                         <ChevronDownIcon className="h-6 w-4" />
                       </span>

@@ -31,20 +31,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     autoMine: true,
   });
 
-  // await deploy("Players", {
-  //   from: deployer,
-  //   args: [],
-  //   log: true,
-  //   // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
-  //   // automatically mining the contract deployment transaction. There is no effect on live networks.
-  //   autoMine: true,
-  // });
-
-  // // Get the deployed contract
-  // const players = await hre.ethers.getContract("Players", deployer);
-  // console.log("Contract deployed to:", players.address);
-
-  await deploy("P2PBet", {
+  await deploy("CountryClub", {
     from: deployer,
     args: [],
     log: true,
@@ -54,9 +41,9 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   });
 
   // Get the deployed contract
-  const p2p = await hre.ethers.getContract("P2PBet", deployer);
-  console.log("Contract deployed to:", p2p.address);
-  await p2p.transferOwnership("0xfdB375d859c4CE20Af8b73Fabbf122a8aE29D46A");
+  const countryClub = await hre.ethers.getContract("CountryClub", deployer);
+  console.log("Contract deployed to:", countryClub.address);
+  await countryClub.transferOwnership("0xfdB375d859c4CE20Af8b73Fabbf122a8aE29D46A");
 };
 
 export default deployYourContract;
